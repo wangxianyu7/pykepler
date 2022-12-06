@@ -1,5 +1,5 @@
 
-__all__ = ["check_koi_ephemeris"]
+__all__ = ["check_koi_ephemeris", "fetch_koi_info"]
 
 import numpy as np
 import pandas as pd
@@ -7,6 +7,12 @@ import matplotlib.pyplot as plt
 import os
 from astroquery.ipac.nexsci.nasa_exoplanet_archive import NasaExoplanetArchive
 from scipy.stats import binned_statistic, median_abs_deviation
+
+
+def fetch_koi_info(kic):
+    koitable = NasaExoplanetArchive.query_criteria(table="cumulative", where="kepid like '%s'"%kic).to_pandas()
+    koitable = koitable.sort_values("koi_period").reset_index(drop=True)
+    return koitable
 
 
 def phasefold(time, flux, t0, period):
@@ -21,12 +27,12 @@ def binning(x, y, binwidth, statistic='median'):
     return 0.5*(bins[1:]+bins[:-1]), vals
 
 
-def check_koi_ephemeris(kic, t, f, datadir=None, save_plot=False):
-    if datadir is None:
-        datadir = "kic%s"%kic
+#def check_koi_ephemeris(kic, t, f, datadir=None, save_plot=False):
+def check_koi_ephemeris(kic, t, f, save_path=None):
+    #if datadir is None:
+    #    datadir = "kic%s"%kic
 
-    koitable = NasaExoplanetArchive.query_criteria(table="cumulative", where="kepid like '%s'"%kic).to_pandas()
-    koitable = koitable.sort_values("koi_period").reset_index(drop=True)
+    koitable = fetch_koi_info(kic)
 
     fig, ax = plt.subplots(len(koitable), 2, figsize=(20,5*len(koitable)), sharey=True)
     for i in range(len(koitable)):
@@ -61,9 +67,11 @@ def check_koi_ephemeris(kic, t, f, datadir=None, save_plot=False):
         ax[i,1].legend(loc='best', bbox_to_anchor=(1,1))
     fig.tight_layout(h_pad=2.0)
 
-    if save_plot:
-        if not os.path.exists(datadir):
-            os.system("mkdir %s"%datadir)
-        plt.savefig(datadir+"/kic%s_fold.png"%kic, dpi=200, bbox_inches="tight")
+    #if save_plot:
+    #    if not os.path.exists(datadir):
+    #        os.system("mkdir %s"%datadir)
+    #    plt.savefig(datadir+"/kic%s_fold.png"%kic, dpi=200, bbox_inches="tight")
+    if save_path is not None:
+        plt.savefig(save_path+".png", dpi=200, bbox_inches="tight")
 
     return koitable
