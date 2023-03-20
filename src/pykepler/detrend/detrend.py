@@ -1,5 +1,5 @@
-
-__all__ = ["harmonic_search", "design_matrix_fourier", "irls_fit", "extend_edge", "detrend_by_quarter"]
+""" general tools """
+__all__ = ["harmonic_search", "design_matrix_fourier", "irls_fit", "extend_edge", "detrend_by_quarter"][:-1]
 
 import numpy as np
 import matplotlib.pyplot as plt
