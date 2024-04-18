@@ -2,6 +2,9 @@
 
 __all__ = ["detrend_by_quarter"]
 
+import numpy as np
+import matplotlib.pyplot as plt
+from . import gpfit_with_mask
 
 def get_transit_mask(t, dkoi, mask_half_width):
     """ mask in-transit data based on KOI catalog t0 and period
