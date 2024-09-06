@@ -86,7 +86,7 @@ def detrend_by_quarter(data, dkoi, remove_bad_flux=True, plot=True, duration_mar
             for i in range(len(t)):
                 in_time = False
                 for j in range(len(midtimes)):
-                    if abs(t[i] - midtimes[j]) < 0.1:
+                    if abs(t[i] - midtimes[j]) < durations[j]:
                         mask.append(True)
                         in_time = True
                 if not in_time:
