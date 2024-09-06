@@ -54,7 +54,7 @@ def get_koi_transit_mask(t, dkoi, duration_margin):
     return mask
 
 
-def detrend_by_quarter(data, dkoi, remove_bad_flux=True, plot=True, duration_margin=2.,mask=None):
+def detrend_by_quarter(data, dkoi, remove_bad_flux=True, plot=True, duration_margin=2.,midtimes=None,durations=None):
     """ detrend KOI light curves
 
         Args:
@@ -78,8 +78,19 @@ def detrend_by_quarter(data, dkoi, remove_bad_flux=True, plot=True, duration_mar
         t, f, e = np.array(data.time[idx]), np.array(data.flux[idx]), np.array(data.error[idx])
 
         #mask = get_transit_mask(t, dkoi, max_half_duration)
-        if mask==None:
+        if midtimes==None:
             mask = get_koi_transit_mask(t, dkoi, duration_margin=duration_margin)
+        else:
+            mask = []
+            for i in range(len(t)):
+                in_time = False
+                for j in range(len(midtimes)):
+                    if abs(time[i] - midtimes[j]) < 0.1:
+                        mask.append(True)
+                        in_time = True
+                if not in_time:
+                    mask.append(False)
+                    
         fbase, _ = gpfit_with_mask(t, f, e, mask=mask)
 
         t_out = np.r_[t_out, t]
