@@ -78,14 +78,15 @@ def detrend_by_quarter(data, dkoi, remove_bad_flux=True, plot=True, duration_mar
         t, f, e = np.array(data.time[idx]), np.array(data.flux[idx]), np.array(data.error[idx])
 
         #mask = get_transit_mask(t, dkoi, max_half_duration)
-        if midtimes==None:
+        #mask = get_transit_mask(t, dkoi, max_half_duration)
+        if np.any(midtimes)==None:
             mask = get_koi_transit_mask(t, dkoi, duration_margin=duration_margin)
         else:
             mask = []
             for i in range(len(t)):
                 in_time = False
                 for j in range(len(midtimes)):
-                    if abs(time[i] - midtimes[j]) < 0.1:
+                    if abs(t[i] - midtimes[j]) < 0.1:
                         mask.append(True)
                         in_time = True
                 if not in_time:
