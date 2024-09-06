@@ -91,7 +91,7 @@ def detrend_by_quarter(data, dkoi, remove_bad_flux=True, plot=True, duration_mar
                         in_time = True
                 if not in_time:
                     mask.append(False)
-                    
+        mask = np.asarray(mask)
         fbase, _ = gpfit_with_mask(t, f, e, mask=mask)
 
         t_out = np.r_[t_out, t]
