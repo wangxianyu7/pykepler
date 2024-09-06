@@ -42,7 +42,7 @@ def get_tcinfo_koi(dkoi, t):
     return tcs, tranums, plnames
 
 
-def detrend_by_quarter(data, dkoi, remove_bad_flux=True, plot=True, duration_margin=2.):
+def detrend_by_quarter(data, dkoi, remove_bad_flux=True, plot=True, duration_margin=2.,mask=None):
     #max_half_duration = np.max(dkoi['koi_duration']) / 24. / 2.
 
     t_out, f_out, e_out, q_out = np.array([]), np.array([]), np.array([]), np.array([])
@@ -54,7 +54,8 @@ def detrend_by_quarter(data, dkoi, remove_bad_flux=True, plot=True, duration_mar
         t, f, e = np.array(data.time[idx]), np.array(data.flux[idx]), np.array(data.error[idx])
 
         #mask = get_transit_mask(t, dkoi, max_half_duration)
-        mask = get_koi_transit_mask(t, dkoi, duration_margin=duration_margin)
+        if mask == None:
+            mask = get_koi_transit_mask(t, dkoi, duration_margin=duration_margin)
         fbase, _ = gpfit_with_mask(t, f, e, mask=mask)
 
         t_out = np.r_[t_out, t]
