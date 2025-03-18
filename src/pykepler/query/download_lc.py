@@ -35,7 +35,8 @@ def lcc2df(lcc, remove_nan=True, quarter_normalize=True):
             f, e = f / fmed, e / fmed
         df = pd.DataFrame(data={"time": t, "flux": f, "error": e, "quality": qual})
         df['quarter'] = q
-        df_out = df_out.append(df, ignore_index=True)
+        # df_out = df_out.append(df, ignore_index=True)
+        df_out = pd.concat([df_out, df], ignore_index=True)
     return df_out.sort_values("time").reset_index(drop=True)
 
 
